@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  {{>_head}}
+  <body>
+    {{#users}}
+      {{>_userdetail}}
+    {{/users}}
+    {{^users}}
+      <p>No one here.</p>
+    {{/users}}
+  </body>
+</html>

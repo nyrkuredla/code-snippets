@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  {{>_head}}
+  <body>
+    <div class="container">
+      <p>Log in to see your snippet collection, or register to start a new one.</p>
+      {{#newUser}}
+        <div class="alert alert-success" role="alert">Success! New user added.</div>
+      {{/newUser}}
+      {{>_login}}
+      {{>_register}}
+  </div>
+  </body>
+</html>
