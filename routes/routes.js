@@ -40,7 +40,11 @@ router
         console.log('password does not match')
         return res.status(401).send({ message: 'Something went wrong...please try again.' })
       }
-      res.send({ token: createToken(user)})
+      else {
+      let myToken = jwt.sign({username: req.body.username}, 'stop right there criminal scum!')
+      console.log(myToken);
+      res.status(200).json(myToken);
+    }
     })
   })
 })

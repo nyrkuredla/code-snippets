@@ -6,6 +6,8 @@ const validator = require('express-validator')
 const userDal = require('./dal')
 const routes = require('./routes/routes')
 const session = require('express-session')
+const expressJWT = require('express-jwt')
+const jwt = require('jsonwebtoken')
 
 //'.mustache' expression linked to mustache express
 app.engine('mustache', mustacheExpress())
@@ -18,6 +20,9 @@ app.use(express.static('public'))
 // setting up bodyParser
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+
+//setting up web tokens
+app.use(expressJWT({ secret: 'stop right there criminal scum!' }).unless({ path: ['/login', '/']}))
 
 //establishing session parameters
 app.use(session({
