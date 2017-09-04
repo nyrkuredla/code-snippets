@@ -1,1 +1,24 @@
-
+<!DOCTYPE html>
+<html>
+  {{>_head}}
+  <body>
+    <div class="container">
+      <h1>Add new snippet</h1>
+      <form class="addnew" action="/addSnippet" method="POST">
+        <input type="text" name="title" value="" placeholder="Title..." required>
+        <input type="textarea" name="snippet" value="" placeholder="Snippet goes here" required>
+        <select class="language" name="language">
+          <option value="">Select language...</option>
+          <option value="java">Java</option>
+          <option value="javascript">JavaScript</option>
+          <option value="python">Python</option>
+          <option value="HTML">HTML</option>
+          <option value="C#">C#</option>
+          <option value="ruby">Ruby</option>
+        </select>
+        <input type="text" name="tag" value="" placeholder="Tag">
+        <input class="submit" type="submit" name="submit" value="Submit!">
+      </form>
+    </div>
+  </body>
+</html>

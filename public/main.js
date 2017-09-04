@@ -1,38 +1,40 @@
 // dom function
 const form = document.querySelector('form')
 const protectedBtn = document.querySelector('#protected')
-const contentDiv = document.querySelector('.content')
-function userHTML (user) {
-  return `
-    <div>
-      <h3>${user.name}</h3>
-      <p>${user.email}</p>
-    </div>
-  `
-}
+// const contentDiv = document.querySelector('.content')
+// function userHTML (user) {
+//   return `
+//     <div>
+//       <h3>${user.name}</h3>
+//       <p>${user.email}</p>
+//     </div>
+//   `
+// }
 
 form.addEventListener('submit', function (event) {
   event.preventDefault()
   const userCred = {
     username: event.target.querySelector('input[name="username"]').value,
     password: event.target.querySelector('input[name="password"]').value
+    console.log(userCred);
   }
   loginUser(userCred).then(function (response) {
     console.log('response for logging in!', response)
     setToken(response.token)
+    console.log(response.token)
     alert('woo, token got got!')
     event.target.querySelector('input[name="username"]').value = ''
     event.target.querySelector('input[name="password"]').value = ''
   })
 })
-
-protectedBtn.addEventListener('click', function (event) {
-  event.preventDefault()
-  getProtected().then(function ({ status, user }) {
-    const html = userHTML(user)
-    contentDiv.innerHTML = html
-  })
-})
+//
+// protectedBtn.addEventListener('click', function (event) {
+//   event.preventDefault()
+//   getProfile().then(function ({ status, user }) {
+//     const html = userHTML(user)
+//     contentDiv.innerHTML = html
+//   })
+// })
 
 // fetch function
 const baseUrl = 'http://localhost:3000'
@@ -46,8 +48,8 @@ function loginUser (userCred) {
     .catch(err => console.log(err))
 }
 
-function getProtected () {
-  return fetch(`${baseUrl}/protected`, {
+function getProfile () {
+  return fetch(`${baseUrl}/profile`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',

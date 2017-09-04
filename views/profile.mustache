@@ -2,6 +2,18 @@
 <html>
   {{>_head}}
   <body>
-    <p>Protected, haha</p>
+    <div class="container">
+      {{#user}}
+        {{>_userdetail}}
+      {{/user}}
+      {{#snippets}}
+        {{>_snippet}}
+      {{/snippets}}
+      {{^snippets}}
+        <p>Nothing here. Want to <a href="/addSnippet">add a snippet?</a></p>
+      {{/snippets}}
+    </div>
+  <!-- <script type="text/javascript" src="./main.js"></script> -->
+
   </body>
 </html>

@@ -7,7 +7,7 @@ const SnippetSchema = new mongoose.Schema({
   notes: String,
   language: {type: String, required: true},
   tag: [{
-    type: String, required: true
+    type: String
   }]
 })
 

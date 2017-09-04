@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  {{>_head}}
+  <body>
+    {{>_userdetail}}
+    <a class="btn btn-primary" href="/addSnippet" role="button">Add New Snippet</a>
+    <form class="getSnippets" action="/snipLang" method="POST">
+      <label for="getSnippets">Get Snippets by Language</label>
+      <select class="language" name="language">
+        <option value="">Select language...</option>
+        <option value="java">Java</option>
+        <option value="javascript">JavaScript</option>
+        <option value="python">Python</option>
+        <option value="HTML">HTML</option>
+        <option value="C#">C#</option>
+        <option value="ruby">Ruby</option>
+      </select>
+    </form>
+    <form class="getSnippets" action="/snipTag" method="POST">
+      <input type="text" name="tag" value="" placeholder="Select tag...">
+    </form>
+    {{title}}
+    {{#snippets}}
+      {{>_snippet}}
+    {{/snippets}}
+  </body>
+</html>

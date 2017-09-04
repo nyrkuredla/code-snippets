@@ -23,8 +23,8 @@ app.use(express.static('public'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-//setting up web tokens
-app.use(expressJWT({ secret: TOKEN_SECRET }).unless({ path: ['/login', '/']}))
+// setting up web tokens
+app.use(expressJWT({ secret: TOKEN_SECRET }).unless({ path: ['/login', '/', '/adduser']}))
 
 //establishing session parameters
 app.use(session({
