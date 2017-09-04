@@ -8,6 +8,8 @@ const routes = require('./routes/routes')
 const session = require('express-session')
 const expressJWT = require('express-jwt')
 const jwt = require('jsonwebtoken')
+const {TOKEN_SECRET} = require('./config')
+const moment = require('moment')
 
 //'.mustache' expression linked to mustache express
 app.engine('mustache', mustacheExpress())
@@ -22,7 +24,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 //setting up web tokens
-app.use(expressJWT({ secret: 'stop right there criminal scum!' }).unless({ path: ['/login', '/']}))
+app.use(expressJWT({ secret: TOKEN_SECRET }).unless({ path: ['/login', '/']}))
 
 //establishing session parameters
 app.use(session({

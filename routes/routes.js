@@ -1,3 +1,4 @@
+//requires and variables
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
@@ -6,6 +7,23 @@ const User = require('../models/User');
 const Snippet = require('../models/Snippet');
 const expressJWT = require('express-jwt');
 const jwt = require('jsonwebtoken')
+
+
+//protected route middleware
+function ensureToken (req, res, next) {
+  const bearerHeader = req.headers["authorization"];
+  if (typeof bearerHeader !== 'undefined') {
+    const header = bearerHeader.split(' ');
+    const bearerToken = header[1];
+    req.token = bearerToken;
+    next();
+  }
+  else {
+    res.status(403);
+  }
+}
+
+//routes
 
 router
   .route('/')
@@ -41,7 +59,7 @@ router
         return res.status(401).send({ message: 'Something went wrong...please try again.' })
       }
       else {
-      let myToken = jwt.sign({username: req.body.username}, 'stop right there criminal scum!')
+      let myToken = jwt.sign({username: req.body.username}, 'super_secret')
       console.log(myToken);
       res.status(200).json(myToken);
     }
@@ -58,6 +76,22 @@ router
     addUser(req.body).then(function(newUser) {
       console.log(req.body)
       res.render('login', {newUser})
+    })
+  })
+
+router
+  .route('/profile')
+  .get(ensureToken, function (req, res) {
+    jwt.verify(req.token, 'super_secret', function (err, data) {
+      if (err) {
+        console.log(err);
+        res.status(403);
+      }
+      else {
+        console.log(data)
+        console.log('successful access!')
+        res.send('hooray')
+      }
     })
   })
 
