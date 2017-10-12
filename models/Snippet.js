@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 //setting up schema
 const SnippetSchema = new mongoose.Schema({
-  author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  author: String,
   title: {type: String, required: true},
   snippet: {type: String, required: true},
   notes: String,
@@ -18,7 +18,7 @@ SnippetSchema.statics.findByLanguage = function (language, cb) {
 }
 
 //function to find snippet by tag
-SnippetSchema.statics.findByTag = function (language,cb) {
+SnippetSchema.statics.findByTag = function (tag ,cb) {
   return this.find({tag})
 }
 

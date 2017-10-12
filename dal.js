@@ -32,13 +32,18 @@ function getSnippetById (snippetId) {
   return Snippet.findOne({ "_id": snippetId})
 }
 
+//getting snippet by author ID#
+function getSnippetByAuth (author) {
+  return Snippet.find({ "author": author})
+}
+
+
 //adding new snippet to db
 function addSnippet (newSnippet) {
   const snippet = new Snippet(newSnippet)
   snippet.save(function (err) {
     console.log(err)
   })
-  console.log("New snippet added!")
   return Promise.resolve("success")
 }
 
@@ -48,11 +53,10 @@ function addUser (newUser) {
   user.save(function (err) {
     console.log(err)
   })
-  console.log("New user added!")
   return Promise.resolve("success")
 }
 
 //exporting functions
 module.exports = {
-  getAllUsers, getAllSnippets, addUser, addSnippet, getUserById, getSnippetById, getUserByUsername
+  getAllUsers, getAllSnippets, addUser, addSnippet, getUserById, getSnippetById, getSnippetByAuth, getUserByUsername
 }

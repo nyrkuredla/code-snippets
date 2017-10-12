@@ -6,13 +6,32 @@
       {{#user}}
         {{>_userdetail}}
       {{/user}}
+      <p><a href="/addSnippet">Add a snippet!</a></p>
+      <form class="snipLang" action="/snipLang" method="POST">
+        <select class="language" name="language">
+          <option value="">Search for snippets by language...</option>
+          <option value="java">Java</option>
+          <option value="javascript">JavaScript</option>
+          <option value="python">Python</option>
+          <option value="HTML">HTML</option>
+          <option value="C#">C#</option>
+          <option value="ruby">Ruby</option>
+        </select>
+        <button type="submit" name="button">Search by language</button>
+      </form>
+      <form class="snipTag" action="/snipTag" method="POST">
+        <input type="text" name="tag" value="" placeholder="Search by tag...">
+        <button type="submit" name="button">Search by tag</button>
+      </form>
+    </div>
       {{#snippets}}
         {{>_snippet}}
       {{/snippets}}
       {{^snippets}}
         <p>Nothing here. Want to <a href="/addSnippet">add a snippet?</a></p>
       {{/snippets}}
-    </div>
+      <p><a href="/users">Back to list of users</a></p>
+
   <!-- <script type="text/javascript" src="./main.js"></script> -->
 
   </body>

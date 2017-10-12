@@ -2,7 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
-const { getAllUsers, getAllSnippets, addUser, addSnippet, getUserById, getSnippetById, getUserByUsername } = require('../dal');
+const { getAllUsers, getAllSnippets, addUser, addSnippet, getUserById, getSnippetById, getSnippetByAuth, getUserByUsername } = require('../dal');
 const User = require('../models/User');
 const Snippet = require('../models/Snippet');
 const session = require('express-session')
@@ -14,6 +14,12 @@ const session = require('express-session')
 
 router
   .route('/')
+  .get(function (req, res) {
+    res.redirect('/users')
+  })
+
+router
+  .route('/users')
   .get(function (req, res) {
     getAllUsers().then(function (users) {
       res.render('users', {users})
@@ -33,7 +39,6 @@ router
   ) {
     if (err) return next(err)
     if (!user) {
-      console.log('no user')
       return res.status(401).send({ message: 'Something went wrong...please try again.' })
     }
     user.comparePassword(req.body.password, user.password, function (
@@ -45,7 +50,6 @@ router
         return res.status(401).send({ message: 'Something went wrong...please try again.' })
       }
       else {
-        console.log(user)
         req.session.user = {
           username: user.username,
           id: user._id,
@@ -66,7 +70,6 @@ router
   })
   .post(function (req, res) {
     addUser(req.body).then(function(newUser) {
-      console.log(req.body)
       res.render('login', {newUser})
     })
   })
@@ -75,9 +78,9 @@ router
   .route('/profile')
   .get(function (req, res) {
    getUserByUsername(req.session.user.username).then(function (user) {
-     let snippets = user.snippets;
-     console.log('snipppppps', user.snippets)
-      res.render('profile', {user: user, snippets: snippets})
+     getSnippetByAuth(user.id).then(function (snippets) {
+       res.render('profile', {user: user, snippets: snippets})
+         })
         })
       })
 
@@ -88,8 +91,6 @@ router
   })
   .post(function (req, res) {
     let user = req.session.user
-    console.log('user tho', user, 'and', req.session)
-    console.log('bahhhdy', req.body)
     let newSnip = {
       author: user.id,
       title: req.body.title,
@@ -97,25 +98,27 @@ router
       language: req.body.language,
       tag: req.body.tag
     }
-    console.log('snippin the new snip', newSnip)
     addSnippet(newSnip).then(function (snippet) {
       res.redirect('/profile')
     })
   })
 
 router
-  .route('/snipLang')
+  .route('/snipLang/')
   .post(function (req, res) {
-    Snippet.findByLanguage(req.body).then(function (snippets) {
-      res.render('profile', {title: 'Find Snippets By Language'}, {snippets})
+    console.log(req.body)
+    Snippet.findByLanguage(req.body.language).then(function (snippets) {
+      console.log('here are the snips', snippets)
+      return res.render('profile', {snippets: snippets})
     })
   })
 
 router
   .route('/snipTag')
   .post(function (req, res) {
-    Snippet.findByTag(req.body).then(function (snippets) {
-      res.render('profile', {title: 'Find Snippets By Tag'}, {snippets})
+    Snippet.findByTag(req.body.tag).then( (snippets) => {
+      console.log('here are the snips', snippets)
+      return res.render('profile', {snippets: snippets});
     })
   })
 
