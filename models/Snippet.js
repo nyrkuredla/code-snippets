@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 //setting up schema
 const SnippetSchema = new mongoose.Schema({
+  author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   title: {type: String, required: true},
   snippet: {type: String, required: true},
   notes: String,

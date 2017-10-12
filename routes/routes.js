@@ -5,23 +5,10 @@ const router = express.Router();
 const { getAllUsers, getAllSnippets, addUser, addSnippet, getUserById, getSnippetById, getUserByUsername } = require('../dal');
 const User = require('../models/User');
 const Snippet = require('../models/Snippet');
-const expressJWT = require('express-jwt');
-const jwt = require('jsonwebtoken')
-
-
-//protected route middleware - commented out for now, see notes in line 91 or in user profile route
-function ensureToken (req, res, next) {
-  const bearerHeader = req.headers["authorization"];
-  if (typeof bearerHeader !== 'undefined') {
-    const header = bearerHeader.split(' ');
-    const bearerToken = header[1];
-    req.token = bearerToken;
-    next();
-  }
-  else {
-    res.status(403);
-  }
-}
+const session = require('express-session')
+// const expressJWT = require('express-jwt');
+// const {TOKEN_SECRET} = require('../config')
+// const jwt = require('jsonwebtoken')
 
 //routes
 
@@ -53,17 +40,20 @@ router
       err,
       isMatch
     ) {
-      console.log('is match', isMatch)
       if (!isMatch) {
         console.log('password does not match')
         return res.status(401).send({ message: 'Something went wrong...please try again.' })
       }
       else {
-        // const sesh = req.session;
-        //commenting out json web token stuff for now
-        let myToken = jwt.sign({username: req.body.username}, 'super_secret')
-
-        res.redirect('profile');
+        console.log(user)
+        req.session.user = {
+          username: user.username,
+          id: user._id,
+          name: user.name,
+          avatar: user.avatar,
+          snippets: user.snippets
+        }
+        res.redirect('/profile');
     }
     })
   })
@@ -83,31 +73,13 @@ router
 
 router
   .route('/profile')
-  //should have ensureToken middleware for json verification but commenting out for now
   .get(function (req, res) {
-    console.log(req.body)
-    res.send('yay')
-  })
-  .get(ensureToken, function (req, res) {
-//
-//     //For some reason having a problem with verifying the token; even though it console-logs as having been set in the login path, and I've got the scripts set up in the main.js file to pull into the submit button to post to the login route, for some reason it isn't 'sticking'. comenting out all json web stuff for now so I can keep building.
-//
-    console.log(req.token)
-    jwt.verify(req.token, 'super_secret', function (err, data) {
-      if (err) {
-        console.log(err);
-        res.status(403);
-      }
-      else {
-        console.log(data)
-        console.log(data.username)
-        let username = data.username;
-        getUserByUsername(username).then(function (user) {
-          res.render('profile', {user})
+   getUserByUsername(req.session.user.username).then(function (user) {
+     let snippets = user.snippets;
+     console.log('snipppppps', user.snippets)
+      res.render('profile', {user: user, snippets: snippets})
         })
-      }
-  })
-})
+      })
 
 router
   .route('/addSnippet')
@@ -115,8 +87,19 @@ router
     res.render('add')
   })
   .post(function (req, res) {
-    addSnippet(req.body).then(function (snippet) {
-      res.render('profile', {user})
+    let user = req.session.user
+    console.log('user tho', user, 'and', req.session)
+    console.log('bahhhdy', req.body)
+    let newSnip = {
+      author: user.id,
+      title: req.body.title,
+      snippet: req.body.snippet,
+      language: req.body.language,
+      tag: req.body.tag
+    }
+    console.log('snippin the new snip', newSnip)
+    addSnippet(newSnip).then(function (snippet) {
+      res.redirect('/profile')
     })
   })
 

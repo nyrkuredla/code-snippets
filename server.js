@@ -23,29 +23,18 @@ app.use(express.static('public'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-// setting up web tokens
-app.use(expressJWT({ secret: TOKEN_SECRET }).unless({ path: ['/login', '/', '/adduser', '/users']}))
-
-//establishing session parameters
-app.use(session({
-  secret: 'hush hush',
-  resave: false,
-  saveUninitialized: false
-}))
-
 //setting up validation
 app.use(validator());
 
-//setting log-in to be false unless successfully logged in
-app.use(function (req, res, next) {
-  if (req.session.usr) {
-    req.isAuthenticated = true
-  }
-  else {
-    req.isAuthenticated = false
-  }
-  next()
-})
+//middleware for session
+app.use(session({
+  user: {},
+  secret: 'such secret, very mystery',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {maxAge:null}
+}))
+
 
 //routes
 app.use('/', routes)

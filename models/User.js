@@ -1,13 +1,14 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
+
 const UserSchema = new mongoose.Schema({
   username: {type: String, unique: true, required: true},
   password: {type: String, select: false},
   name: {type: String, required: true},
   avatar: String,
   url: String,
-  snippets: [{String}]
+  snippets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Snippet' }]
 })
 
 UserSchema.pre('save', function (next) {
